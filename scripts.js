@@ -282,6 +282,33 @@ function showProducts() {
  * @returns undefined
  */
 function addProductToCart() {
+  debugger;
+  const productIdAsString = prompt('Auðkenni vöru sem á að bæta við körfu:')
+  
+  if (!productIdAsString) {
+    console.error('verður að vera tala');
+    return;
+  }
+
+  const productId = Number.parseInt(productIdAsString);
+  console.log(productId); 
+
+  const product = products.find((i) => i.id === productId)
+  
+  if (!product) {
+    console.error('vara fannst ekki');
+    return;
+  }
+
+  let productInCart = cart.lines.find((i) => i.product.id === productId )
+  
+  if (productInCart){
+    productInCart.quantity += 1;
+  }
+  else {
+    const newLine = {product, quantity:1}
+    cart.lines.push(newLine)
+  }
   /* Útfæra */
 
   /* Hér ætti að nota `validateInteger` hjálparfall til að staðfesta gögn frá notanda */
