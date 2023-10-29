@@ -262,8 +262,9 @@ function addProduct() {
  * @returns undefined
  */
 function showProducts() {
-  /* Útfæra */
-  /* Hér ætti að nota `formatPrice` hjálparfall */
+  for (const product of products) {
+    console.log(`#${product.id} ${product.title} — ${product.description} — ${formatPrice(product.price)} kr.`);
+  }
 }
 
 /**
@@ -309,11 +310,6 @@ function addProductToCart() {
     const newLine = {product, quantity:1}
     cart.lines.push(newLine)
   }
-  /* Útfæra */
-
-  /* Hér ætti að nota `validateInteger` hjálparfall til að staðfesta gögn frá notanda */
-  
-  /* Til að athuga hvort vara sé til í `cart` þarf að nota `cart.lines.find` */
 }
 
 /**
@@ -329,7 +325,19 @@ function addProductToCart() {
  * @returns undefined
  */
 function showCart() {
-  /* Útfæra */
+  if (cart.lines.length === 0) {
+    console.log('Karfan er tóm.');
+  } else {
+    for (const cartLine of cart.lines) {
+      const { product, quantity } = cartLine;
+      const lineTotal = product.price * quantity;
+      console.log(`${formatProduct(product, quantity)} samtals ${formatPrice(lineTotal)}`);
+    }
+    const total = cart.lines.reduce((acc, cartLine) => {
+      return acc + cartLine.product.price * cartLine.quantity;
+    }, 0);
+    console.log(`Samtals: ${formatPrice(total)} kr.`);
+  }
 }
 
 /**
@@ -351,5 +359,37 @@ function showCart() {
  * @returns undefined
  */
 function checkout() {
-  /* Útfæra */
+  if (cart.lines.length === 0) {
+    console.log('Karfan er tóm.');
+  } else {
+    const userName = prompt('nafn:');
+    const userAddress = prompt('heimilisfang:');
+
+    if (!userName) {
+      console.error('"Nafn" má ekki vera tómt.');
+      return;
+    }
+
+    if (!userAddress){
+      console.error('"Heimilisfang" má ekki vera tómt.');
+      return;
+    }
+
+    console.log(`Pöntun móttekin ${userName}.`);
+    console.log(`Vörur verða sendar á ${userAddress}.\n`);
+
+    for (const cartLine of cart.lines) {
+      const { product, quantity } = cartLine;
+      const lineTotal = product.price * quantity;
+      console.log(`${formatProduct(product, quantity)} samtals ${formatPrice(lineTotal)}`);
+    }
+
+    const total = cart.lines.reduce((acc, cartLine) => {
+      return acc + cartLine.product.price * cartLine.quantity;
+    }, 0);
+    console.log(`Samtals: ${formatPrice(total)} kr.`);
+    cart.lines = [];
+    cart.name = null;
+    cart.address = null;
+  }
 }
